@@ -1,0 +1,251 @@
+import requests
+import json
+import base64
+import sys
+import time
+import itertools
+import datetime
+import calendar
+
+
+	#print(response.text)
+	# Extract access token from response
+	
+for _ in itertools.repeat([]):  # return an infinite iterator
+	try:
+		# Get today's date
+		today = datetime.date.today()
+
+		# Get the first day of the previous month
+		first_day = datetime.date(today.year, today.month, today.day)
+
+		# Get the last day of the previous month
+		last_day = datetime.date(today.year, today.month, calendar.monthrange(today.year, today.month-2)[1])
+
+		# Format the dates as strings in 'yyyy-mm-dd' format
+		first_day_str = first_day.strftime('%Y-%m-%d')
+		last_day_str = last_day.strftime('%Y-%m-%d')
+
+		# Concatenate the dates to a string
+		date_range_str = f"timestamp ge {first_day_str}T00:00:00Z and timestamp lt {last_day_str}T00:00:00Z"
+		filter_param = date_range_str
+		filterQuery = " and contains(message,'kibana')"
+		orderby_param = "timestamp asc"
+		top_param = "1000"
+		print(f"Date range: {date_range_str}")
+
+		url = "https://account.uipath.com/oauth/token"
+		payload = json.dumps({
+		  "grant_type": "refresh_token",
+		  "client_id": "yourid",
+		  "refresh_token": "yourtoken"
+		})
+		headers = {
+		  'Authorization': 'Bearer',
+		  'X-UIPATH-TenantName': 'tenantname',
+		  'Content-Type': 'application/json',
+		  'Cookie': 'did=s%3Av0%3Acafd0060-e02a-11ed-ae6c-57f2bdc5c8f2.OEA6i5DI6mFfgh2rd8Lo9Y2Iwl27UNnQr6E0REzJBHM; did_compat=s%3Av0%3Acafd0060-e02a-11ed-ae6c-57f2bdc5c8f2.OEA6i5DI6mFfgh2rd8Lo9Y2Iwl27UNnQr6E0REzJBHM'
+		}
+		response = requests.request("POST", url, headers=headers, data=payload)
+		access_token = response.json()["access_token"]
+
+		url = "https://cloud.uipath.com/orgname/tenantname/orchestrator_/odata/RobotLogs"
+		headers = {
+			"Authorization": "Bearer "+access_token,
+			"Content-Type": "application/json",
+			"X-UIPATH-OrganizationUnitId": "{insert_org_id}"
+		}
+				
+		
+		params = {
+					'$filter': filter_param+filterQuery,
+					'$orderby': orderby_param,
+					'$select':'*',
+					'$top': top_param
+				}
+		response = requests.get(url, headers=headers, params=params)
+		logs = response.json()
+		#print(response.json())
+		# Parse the JSON data
+		json_logs = json.dumps(logs)
+		parsed_json = json.loads(json_logs)
+		i = 0
+		counter = 0	
+		print("Counter : ", counter)
+		print("Sleeping for 2 hour : ")
+		time.sleep(7200)
+		data = response.json()['value']
+		for i in range(1000):
+
+						# Perform an action here
+						print("Inside : ", counter)
+						# Access the nested JSON data as a dictionary
+						nested_json_dict = json.loads(parsed_json['value'][counter]['RawMessage'])
+						# Access the values in the nested JSON data dictionary
+						nested_value1 = nested_json_dict['message']
+						nested_value2 = nested_json_dict['level']
+						nested_value3 = nested_json_dict['logType']
+						nested_value4 = nested_json_dict['timeStamp']
+						nested_value5 = nested_json_dict['fingerprint']
+						nested_value6 = nested_json_dict['windowsIdentity']
+						nested_value7 = nested_json_dict['machineName']
+						nested_value8 = nested_json_dict['fileName']
+						#nested_value9 = nested_json_dict['initiatedBy']
+						nested_value10 = nested_json_dict['processName']
+						nested_value11 = nested_json_dict['processVersion']
+						nested_value12 = nested_json_dict['jobId']
+						nested_value13 = nested_json_dict['robotName']
+						nested_value14 = nested_json_dict['machineId']
+						nested_value15 = nested_json_dict['organizationUnitId']
+						if 'SuccessRequest' in nested_json_dict:
+							# Access the value associated with the 'SuccessRequest' key
+							nested_value16 = nested_json_dict['SuccessRequest']
+						else:
+							# Handle the case where the key is not present
+							nested_value16 = '0'
+						#nested_value16 = nested_json_dict['SuccessRequest']
+						if 'TotalRequest' in nested_json_dict:
+							# Access the value associated with the 'TotalRequest' key
+							nested_value17 = nested_json_dict['TotalRequest']
+						else:
+							# Handle the case where the key is not present
+							nested_value17 = '0'
+						#nested_value17 = nested_json_dict['TotalRequest']
+						if 'FailedRequest' in nested_json_dict:
+							# Access the value associated with the 'FailedRequest' key
+							nested_value18 = nested_json_dict['FailedRequest']
+						else:
+							# Handle the case where the key is not present
+							nested_value18 = '0'
+						if 'totalExecutionTimeInSeconds' in nested_json_dict:
+							# Access the value associated with the 'totalExecutionTimeInSeconds' key
+							nested_value19 = nested_json_dict['totalExecutionTimeInSeconds']
+						else:
+							# Handle the case where the key is not present
+							nested_value19 = '0'
+						if 'totalExecutionTime' in nested_json_dict:
+							# Access the value associated with the 'totalExecutionTime' key
+							nested_value20 = nested_json_dict['totalExecutionTime']
+						else:
+							# Handle the case where the key is not present
+							nested_value20 = '0'
+						if 'queueName' in nested_json_dict:
+							# Access the value associated with the 'queueName' key
+							nested_value21 = nested_json_dict['queueName']
+						else:
+							# Handle the case where the key is not present
+							nested_value21 = None
+						if 'transactionID' in nested_json_dict:
+							# Access the value associated with the 'transactionID' key
+							nested_value22 = nested_json_dict['transactionID']
+						else:
+							# Handle the case where the key is not present
+							nested_value22 = None
+						if 'transactionState' in nested_json_dict:
+							# Access the value associated with the 'transactionState' key
+							nested_value23 = nested_json_dict['transactionState']
+						else:
+							# Handle the case where the key is not present
+							nested_value23 = None
+						if 'initiatedBy' in nested_json_dict:
+							# Access the value associated with the 'initiatedBy' key
+							nested_value24 = nested_json_dict['initiatedBy']
+						else:
+							# Handle the case where the key is not present
+							nested_value24 = None
+						if 'transactionStatus' in nested_json_dict:
+							# Access the value associated with the 'transactionStatus' key
+							nested_value25 = nested_json_dict['transactionStatus']
+						else:
+							# Handle the case where the key is not present
+							nested_value25 = None
+						if 'transactionExecutionTime' in nested_json_dict:
+							# Access the value associated with the 'transactionExecutionTime' key
+							nested_value26 = nested_json_dict['transactionExecutionTime']
+						else:
+							# Handle the case where the key is not present
+							nested_value26 = '0'
+						if 'processingExceptionType' in nested_json_dict:
+							# Access the value associated with the 'processingExceptionType' key
+							nested_value27 = nested_json_dict['processingExceptionType']
+						else:
+							# Handle the case where the key is not present
+							nested_value27 = None
+						if 'processingExceptionReason' in nested_json_dict:
+							# Access the value associated with the 'processingExceptionReason' key
+							nested_value28 = nested_json_dict['processingExceptionReason']
+						else:
+							# Handle the case where the key is not present
+							nested_value28 = None
+						if 'queueItemReviewStatus' in nested_json_dict:
+							# Access the value associated with the 'queueItemReviewStatus' key
+							nested_value29 = nested_json_dict['queueItemReviewStatus']
+						else:
+							# Handle the case where the key is not present
+							nested_value29 = None
+						if 'queueItemPriority' in nested_json_dict:
+							# Access the value associated with the 'queueItemPriority' key
+							nested_value30 = nested_json_dict['queueItemPriority']
+						else:
+							# Handle the case where the key is not present
+							nested_value30 = None
+							
+						
+						#nested_value18 = nested_json_dict['FailedRequest']
+						logs["message"] = nested_value1
+						logs["level"] = nested_value2
+						logs["logType"] = nested_value3
+						logs["timeStamp"] = nested_value4
+						logs["fingerprint"] = nested_value5
+						logs["windowsIdentity"] = nested_value6
+						logs["machineName"] = nested_value7
+						logs["fileName"] = nested_value8
+						#logs["initiatedBy"] = 'null'
+						logs["processName"] = nested_value10
+						logs["processVersion"] = nested_value11
+						logs["jobId"] = nested_value12
+						logs["robotName"] = nested_value13
+						logs["machineId"] = nested_value14
+						logs["organizationUnitId"] = nested_value15
+						logs["SuccessRequest"] = nested_value16
+						logs["TotalRequest"] = nested_value17
+						logs["FailedRequest"] = nested_value18
+						logs["totalExecutionTimeInSeconds"] = nested_value19
+						logs["totalExecutionTime"] = nested_value20
+						logs["queueName"] = nested_value21
+						logs["transactionID"] = nested_value22
+						logs["transactionState"] = nested_value23
+						logs["initiatedBy"] = nested_value24
+						logs["transactionStatus"] = nested_value25
+						logs["transactionExecutionTime"] = nested_value26
+						logs["processingExceptionType"] = nested_value27
+						logs["processingExceptionReason"] = nested_value28
+						logs["queueItemReviewStatus"] = nested_value29
+						logs["queueItemPriority"] = nested_value30
+						json_logs = json.dumps(logs)
+
+						# Print the values
+						print("Message : ", nested_value1)
+						print("Total Time in Seconds : ", nested_value19)
+						print("Level: ", nested_value2)
+						print("logType : ", nested_value3)
+						print("timeStamp : ", nested_value4)
+						print("TotalRequest", nested_value17)	
+						i += 1
+						print("Index : {i}", counter)
+						counter += 1
+						url ="http://localhost:9200/indexname/_doc"
+						username = 'youruser'
+						password = 'yourpass'
+						auth_header = base64.b64encode(bytes(username + ':' + password, 'utf-8')).decode('utf-8')
+						headers = {
+							'Authorization': 'Basic ' + auth_header,
+							"Content-Type": "application/json"
+						}
+						response = requests.post(url, headers=headers, data=json_logs)
+						print(response.json())
+						print(i,'---------------------------------------------------------------------------------------------------------------------------------------')
+						time.sleep(1)
+						print("Logs indexed successfully.") 
+	except:		
+	  print("Error : ", counter)
